@@ -374,3 +374,34 @@
                 font-size: 3rem;
             }
         }
+        /* Notification Bell Animation */
+@keyframes bellRing {
+    0% { transform: rotate(0); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(-15deg); }
+    75% { transform: rotate(5deg); }
+    100% { transform: rotate(0); }
+}
+
+.notification-badge {
+    display: inline-block;
+    animation: bellRing 0.5s ease;
+}
+
+.notification-enabled {
+    background: #48bb78;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+}
+
+.notification-disabled {
+    background: #f56565;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+}

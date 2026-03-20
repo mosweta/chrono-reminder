@@ -2,26 +2,475 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ChronoRemind | Voice-Enhanced Smart Reminder System</title>
-<link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#0b5e42">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ChronoRemind | Mobile Smart Reminder System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        body {
+            background: linear-gradient(135deg, #0b3b2f 0%, #1a4d3a 50%, #2c1810 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 12px;
+            min-height: 100vh;
+            position: relative;
+            touch-action: pan-y pinch-zoom;
+        }
+
+        /* Main Container - Mobile First */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 50%, #8b3c2c 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #2c5282;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #1a472a;
+        }
+
+        /* Mobile Timer Display */
+        .timer-display {
+            text-align: center;
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 50%, #8b3c2c 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-timer {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            word-break: break-word;
+        }
+
+        /* Mobile Sliders */
+        .sliders-container {
+            background: linear-gradient(135deg, #f0f9f4 0%, #e8f0fa 100%);
+            border-radius: 20px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .slider-group {
+            margin: 16px 0;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a472a;
+            font-size: 0.9rem;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 40px;
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #0b5e42;
+            border: 2px solid white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            margin-top: -10px;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px;
+            background: linear-gradient(90deg, #0b5e42, #2c5282, #8b3c2c);
+            border-radius: 10px;
+        }
+
+        .number-input {
+            width: 70px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #cbd5e0;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            background: white;
+        }
+
+        /* Mobile Presets */
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .preset-btn {
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%);
+            border: none;
+            padding: 12px 8px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+            touch-action: manipulation;
+        }
+
+        .preset-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Mobile Note Area */
+        .note-area {
+            margin: 16px 0;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            font-family: inherit;
+            resize: vertical;
+            font-size: 0.95rem;
+            background: white;
+            -webkit-appearance: none;
+        }
+
+        /* Mobile Buttons */
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .btn {
+            padding: 14px 12px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            text-align: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #2c5282 0%, #8b3c2c 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #8b3c2c;
+            color: white;
+        }
+
+        /* Mobile Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%);
+            padding: 12px;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        /* Mobile History */
+        .history-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .history-item {
+            background: linear-gradient(135deg, #f0f9f4 0%, #e8f0fa 100%);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #0b5e42;
+            font-size: 0.85rem;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0b5e42, #2c5282, #8b3c2c);
+            transition: width 0.1s linear;
+        }
+
+        /* Mobile Voice Command */
+        .voice-command {
+            background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+
+        .voice-command:active {
+            transform: scale(0.98);
+        }
+
+        .voice-command.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #ed8936 0%, #e53e3e 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .voice-status {
+            font-size: 0.8rem;
+            margin-top: 12px;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            word-break: break-word;
+        }
+
+        /* Mobile Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #e8f0fa 0%, #f0f9f4 100%);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        /* Sound Selector */
+        .sound-selector select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 0.95rem;
+            background: white;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                max-width: 1200px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            
+            .full-width {
+                grid-column: 1 / -1;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-timer {
+                font-size: 4rem;
+            }
+            
+            .button-group {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .presets {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .main-timer {
+                font-size: 5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Mobile Safe Area */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Main Timer Card -->
         <div class="card">
-            <h2>⏰ ChronoRemind Smart Timer</h2>
+            <h2>⏰ ChronoRemind</h2>
             <div class="timer-display">
                 <div class="main-timer" id="mainTimer">00:00:00</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
-                <div id="statusText" style="font-size: 0.9rem; position: relative; z-index: 1;">● Ready</div>
+                <div id="statusText" style="font-size: 0.85rem;">● Ready</div>
             </div>
 
             <div class="sliders-container">
-                <h3 style="margin-bottom: 15px; color: #1a472a;">⏱️ Custom Duration</h3>
+                <h3>⏱️ Set Duration</h3>
                 
                 <div class="slider-group">
                     <div class="slider-header">
@@ -58,21 +507,21 @@
             </div>
 
             <div class="presets">
-                <button class="preset-btn" data-hours="0" data-minutes="5" data-seconds="0">🍅 5 min</button>
-                <button class="preset-btn" data-hours="0" data-minutes="15" data-seconds="0">☕ 15 min</button>
-                <button class="preset-btn" data-hours="0" data-minutes="25" data-seconds="0">📚 25 min</button>
-                <button class="preset-btn" data-hours="1" data-minutes="0" data-seconds="0">💪 1 hour</button>
-                <button class="preset-btn" data-hours="0" data-minutes="45" data-seconds="0">🎯 45 min</button>
+                <button class="preset-btn" data-hours="0" data-minutes="5" data-seconds="0">🍅 5m</button>
+                <button class="preset-btn" data-hours="0" data-minutes="15" data-seconds="0">☕ 15m</button>
+                <button class="preset-btn" data-hours="0" data-minutes="25" data-seconds="0">📚 25m</button>
+                <button class="preset-btn" data-hours="0" data-minutes="45" data-seconds="0">🎯 45m</button>
+                <button class="preset-btn" data-hours="1" data-minutes="0" data-seconds="0">💪 1h</button>
             </div>
 
             <div class="note-area">
-                <label>📝 Reminder Message:</label>
-                <textarea id="reminderMessage" rows="3">✨ Time for a mindful break! Stretch, hydrate, and breathe ✨</textarea>
+                <label style="font-weight: 600; color: #1a472a;">📝 Reminder Message:</label>
+                <textarea id="reminderMessage" rows="2">✨ Time for a mindful break! Stretch, hydrate, and breathe ✨</textarea>
             </div>
 
-            <div style="margin: 15px 0;">
-                <label>🔊 Alert Sound:</label>
-                <select id="soundSelect" style="width: 100%; padding: 10px; border-radius: 12px; border: 2px solid #e2e8f0;">
+            <div class="sound-selector">
+                <label style="font-weight: 600; color: #1a472a;">🔊 Alert Sound:</label>
+                <select id="soundSelect">
                     <option value="beep">📢 Classic Beep</option>
                     <option value="bell">🔔 Gentle Bell</option>
                     <option value="chime">🎵 Melodic Chime</option>
@@ -82,98 +531,109 @@
             </div>
 
             <div class="button-group">
-                <button class="btn btn-primary" id="startBtn">▶ Start Timer</button>
+                <button class="btn btn-primary" id="startBtn">▶ Start</button>
                 <button class="btn btn-warning" id="pauseBtn">⏸ Pause</button>
-                <button class="btn btn-secondary" id="resetBtn">⟳ Reset Cycle</button>
-                <button class="btn btn-danger" id="stopBtn">⏹ Stop All</button>
+                <button class="btn btn-secondary" id="resetBtn">⟳ Reset</button>
+                <button class="btn btn-danger" id="stopBtn">⏹ Stop</button>
             </div>
         </div>
 
         <!-- Analytics & History Card -->
         <div class="card">
-            <h2>📊 Smart Analytics</h2>
+            <h2>📊 Analytics</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="totalReminders">0</div>
-                    <div class="stat-label">Total Reminders</div>
+                    <div class="stat-label">Reminders</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="completedCycles">0</div>
-                    <div class="stat-label">Completed Cycles</div>
+                    <div class="stat-label">Cycles</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="totalFocusTime">0</div>
-                    <div class="stat-label">Total Focus Time</div>
+                    <div class="stat-label">Focus Time</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="productivityScore">100</div>
-                    <div class="stat-label">Productivity Score</div>
+                    <div class="stat-label">Score</div>
                 </div>
             </div>
 
-            <h2 style="margin-top: 20px;">📜 Reminder History</h2>
+            <h2 style="margin-top: 16px;">📜 History</h2>
             <div class="history-list" id="historyList">
-                <div style="text-align: center; color: #a0aec0;">No reminders yet</div>
+                <div style="text-align: center; color: #a0aec0; padding: 20px;">No reminders yet</div>
             </div>
         </div>
 
         <!-- Advanced Features Card -->
         <div class="card full-width">
-            <h2>🚀 Advanced Features</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                
-                <!-- Voice Commands - Improved Version -->
+            <h2>🚀 Features</h2>
+            <div class="features-grid">
+                <!-- Voice Commands -->
                 <div class="voice-command" id="voiceCommandBtn">
-                    <div style="font-size: 3rem;">🎤</div>
-                    <h3>Voice Commands</h3>
-                    <p style="font-size: 0.9rem; margin: 10px 0;">Try saying:</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0;">
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;">"start"</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;">"pause"</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;">"reset"</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;">"stop"</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;">"set 5 minutes"</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;">"set 1 hour"</span>
-                    </div>
+                    <div style="font-size: 2.5rem;">🎤</div>
+                    <h3 style="color: white; margin: 8px 0;">Voice Commands</h3>
+                    <p style="font-size: 0.8rem;">Tap mic and speak</p>
                     <div class="voice-status" id="voiceStatus">
-                        🎙️ Click the microphone to start
+                        🎙️ Tap to start
                     </div>
                 </div>
 
                 <!-- Motivational Quotes -->
-                <div style="background: linear-gradient(135deg, #e8f0fa 0%, #f0f9f4 100%); border-radius: 20px; padding: 20px;">
-                    <h3 style="color: #1a472a;">💡 Daily Motivation</h3>
-                    <div id="quoteDisplay" style="font-style: italic; margin: 15px 0; color: #2d3748;">"Your future self will thank you for staying consistent"</div>
-                    <button class="btn" id="newQuoteBtn" style="background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%); color: white;">New Quote</button>
+                <div class="feature-card">
+                    <h3>💡 Motivation</h3>
+                    <div id="quoteDisplay" style="font-style: italic; margin: 10px 0; font-size: 0.9rem;">"Your future self will thank you"</div>
+                    <button class="btn" id="newQuoteBtn" style="background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%); color: white; width: 100%;">New Quote</button>
                 </div>
 
                 <!-- Smart Suggestions -->
-                <div style="background: linear-gradient(135deg, #fff5e6 0%, #ffe8f0 100%); border-radius: 20px; padding: 20px;">
-                    <h3 style="color: #8b3c2c;">🧠 Smart Suggestions</h3>
-                    <div id="suggestionDisplay">Based on your activity, try a 5-min stretch break</div>
-                    <button class="btn" id="applySuggestionBtn" style="background: linear-gradient(135deg, #2c5282 0%, #8b3c2c 100%); color: white; margin-top: 10px;">Apply Suggestion</button>
+                <div class="feature-card">
+                    <h3>🧠 Suggestions</h3>
+                    <div id="suggestionDisplay" style="margin: 10px 0; font-size: 0.9rem;">Try a 5-min stretch break</div>
+                    <button class="btn" id="applySuggestionBtn" style="background: linear-gradient(135deg, #2c5282 0%, #8b3c2c 100%); color: white; width: 100%;">Apply</button>
                 </div>
 
                 <!-- Preferences -->
-                <div style="background: linear-gradient(135deg, #e6f7ff 0%, #f0f9f4 100%); border-radius: 20px; padding: 20px;">
-                    <h3 style="color: #0b5e42;">⚙️ Preferences</h3>
-                    <div style="margin: 10px 0;">
-                        <label>🌓 Theme:</label>
-                        <select id="themeSelect" style="width: 100%; margin-top: 5px; padding: 8px; border-radius: 12px;">
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="gradient">Gradient</option>
+                <div class="feature-card">
+                    <h3>⚙️ Settings</h3>
+                    <div style="margin: 8px 0;">
+                        <select id="themeSelect" style="width: 100%; padding: 10px; border-radius: 12px; border: 2px solid #e2e8f0; margin-bottom: 8px;">
+                            <option value="light">Light Theme</option>
+                            <option value="dark">Dark Theme</option>
+                            <option value="gradient">Gradient Theme</option>
                         </select>
                     </div>
-                    <div style="margin: 10px 0;">
-                        <label>🔔 Desktop Notifications:</label>
-                        <input type="checkbox" id="desktopNotify" checked> Enable
-                    </div>
+                    <!-- Desktop Notification Settings Card -->
+
                 </div>
+              <!-- Desktop Notification Settings Card -->
+<div class="card">
+    <h2>🔔 Notification Settings</h2>
+    <div style="padding: 15px;">
+        <div style="margin-bottom: 15px;">
+            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                <input type="checkbox" id="desktopNotify" style="width: 20px; height: 20px; cursor: pointer;">
+                <span style="font-weight: 600; color: #1a472a;">Enable Desktop Notifications</span>
+            </label>
+            <p style="font-size: 0.85rem; color: #666; margin-top: 8px; margin-left: 32px;">
+                Receive system notifications even when browser is in background
+            </p>
+        </div>
+        
+        <div id="notificationStatus" style="padding: 10px; border-radius: 12px; background: #f0f9f4; font-size: 0.85rem;">
+            ⚠️ Click "Request Permission" to enable notifications
+        </div>
+        
+        <button id="requestNotifyBtn" class="btn" style="margin-top: 12px; background: linear-gradient(135deg, #0b5e42 0%, #2c5282 100%); color: white; width: 100%; padding: 12px;">
+            🔔 Request Notification Permission
+        </button>
+    </div>
+</div>  
             </div>
         </div>
     </div>
 
-   <script src="reminder.js"></script> 
+<script src="reminder.js"></script>
 </body>
 </html>
