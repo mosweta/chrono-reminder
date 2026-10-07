@@ -75,6 +75,7 @@ A sophisticated, modular reminder application that transforms simple timer funct
 - **Productivity Analytics**: Visual insights into your habits
 
 ## 📁 Project Structure
+```
 chronoremind/
 │
 ├── index.html # Main HTML structure
@@ -88,7 +89,7 @@ chronoremind/
 │ └── images/ # Image assets (for future expansion)
 ├── README.md # Comprehensive documentation
 ├── LICENSE # MIT License
-
+```
 ### File Details
 
 #### `index.html`
